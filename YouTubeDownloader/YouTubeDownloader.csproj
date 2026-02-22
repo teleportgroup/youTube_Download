@@ -1,4 +1,4 @@
-ï»¿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -6,6 +6,20 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+
+    <!-- Version: This is the canonical source -->
+    <VersionPrefix>1.1.0</VersionPrefix>
+    <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
+    <FileVersion>$(VersionPrefix).0</FileVersion>
+
+    <!-- App metadata -->
+    <Product>YouTube Audio Downloader</Product>
+    <Company>Alan</Company>
+    <Copyright>Copyright © 2024</Copyright>
+    <Description>Download YouTube videos as high-quality audio files</Description>
+
+    <!-- GitHub repo for updates -->
+    <RepositoryUrl>https://github.com/teleportgroup/youTube_Download</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
