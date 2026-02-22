@@ -1,10 +1,11 @@
 ; YouTube Audio Downloader Installer Script
-; Created with Inno Setup
+; Version is read from the built executable
 
 #define MyAppName "YouTube Audio Downloader"
-#define MyAppVersion "1.0.0"
 #define MyAppPublisher "Alan"
 #define MyAppExeName "YouTubeDownloader.exe"
+#define MyAppExePath "publish\" + MyAppExeName
+#define MyAppVersion GetVersionNumbersString(MyAppExePath)
 
 [Setup]
 ; Application info

@@ -13,6 +13,7 @@ public partial class SettingsWindow : Window
     {
         InitializeComponent();
         LoadCurrentTheme();
+        LoadVersionInfo();
     }
 
     public SettingsWindow(DownloadSettings downloadSettings) : this()
@@ -48,6 +49,11 @@ public partial class SettingsWindow : Window
         }
     }
 
+    private void LoadVersionInfo()
+    {
+        VersionText.Text = UpdateService.Instance.CurrentVersion.ToString(3);
+    }
+
     private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (ThemeComboBox.SelectedItem is ComboBoxItem selected && selected.Tag is string themeTag)
@@ -70,6 +76,35 @@ public partial class SettingsWindow : Window
                 _downloadSettings.MaxConcurrentDownloads = count;
             }
         }
+    }
+
+    private async void CheckUpdates_Click(object sender, RoutedEventArgs e)
+    {
+        CheckUpdatesButton.IsEnabled = false;
+        UpdateStatusText.Text = "Checking for updates...";
+
+        var updateInfo = await UpdateService.Instance.CheckForUpdatesAsync();
+
+        if (updateInfo == null)
+        {
+            UpdateStatusText.Text = "Could not check for updates. Please try again later.";
+        }
+        else if (UpdateService.Instance.UpdateAvailable)
+        {
+            UpdateStatusText.Text = $"Version {updateInfo.Version} available!";
+
+            var updateWindow = new UpdateWindow(updateInfo)
+            {
+                Owner = this
+            };
+            updateWindow.ShowDialog();
+        }
+        else
+        {
+            UpdateStatusText.Text = "You're running the latest version.";
+        }
+
+        CheckUpdatesButton.IsEnabled = true;
     }
 
     private void CloseButton_Click(object sender, RoutedEventArgs e)
