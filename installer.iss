@@ -5,7 +5,8 @@
 #define MyAppPublisher "Alan"
 #define MyAppExeName "YouTubeDownloader.exe"
 #define MyAppExePath "publish\" + MyAppExeName
-#define MyAppVersion GetVersionNumbersString(MyAppExePath)
+#define MyAppFullVersion GetVersionNumbersString(MyAppExePath)
+#define MyAppVersion Copy(MyAppFullVersion, 1, Len(MyAppFullVersion) - 2)
 
 [Setup]
 ; Application info
