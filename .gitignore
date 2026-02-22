@@ -1,0 +1,65 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.rsuser
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# VS Code
+.vscode/
+
+# NuGet
+*.nupkg
+**/packages/*
+!**/packages/build/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Publish output
+publish/
+installer_output/
+
+# Downloaded dependencies
+yt-dlp.exe
+ffmpeg.exe
+ffprobe.exe
+ffmpeg.zip
+
+# Inno Setup
+innosetup.exe
+
+# User settings
+*.config
+!*.config.template
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Logs
+*.log
+logs/
+
+# Temp files
+*.tmp
+*.temp
+~$*
+
+# Claude Code
+.claude/
