@@ -8,7 +8,7 @@
     <UseWPF>true</UseWPF>
 
     <!-- Version: This is the canonical source -->
-    <VersionPrefix>1.1.2</VersionPrefix>
+    <VersionPrefix>1.1.3</VersionPrefix>
     <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
     <FileVersion>$(VersionPrefix).0</FileVersion>
 
