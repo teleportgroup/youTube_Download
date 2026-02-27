@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:YouTubeDownloader.ViewModels"
         Title="YouTube Audio Downloader"
-        Height="800" Width="1000"
-        MinHeight="600" MinWidth="800"
+        Height="700" Width="900"
+        MinHeight="500" MinWidth="700"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource WindowBackgroundBrush}">
 
@@ -146,11 +146,45 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Tab Control Style -->
+        <Style TargetType="TabControl">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style TargetType="TabItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="Border"
+                                Background="{TemplateBinding Background}"
+                                BorderThickness="0,0,0,2"
+                                BorderBrush="Transparent"
+                                Padding="{TemplateBinding Padding}"
+                                Margin="0,0,4,0">
+                            <ContentPresenter ContentSource="Header"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
-    <Grid Margin="20">
+    <Grid Margin="16">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -159,7 +193,7 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <Grid Grid.Row="0" Margin="0,0,0,15">
+        <Grid Grid.Row="0" Margin="0,0,0,12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -167,7 +201,7 @@
 
             <TextBlock Grid.Column="0"
                        Text="YouTube Audio Downloader"
-                       FontSize="24"
+                       FontSize="22"
                        FontWeight="Bold"
                        Foreground="{DynamicResource TextPrimaryBrush}"/>
 
@@ -178,205 +212,257 @@
                     Click="SettingsButton_Click"/>
         </Grid>
 
-        <!-- Search Section -->
-        <GroupBox Grid.Row="1" Header="Search YouTube" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,15">
-            <Grid Margin="10">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+        <!-- Tabbed Input Section -->
+        <TabControl Grid.Row="1" Margin="0,0,0,12">
+            <!-- Search Tab -->
+            <TabItem Header="Search">
+                <Grid Margin="0,12,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-                    <!-- Search TextBox with Placeholder -->
-                    <Grid Grid.Column="0">
-                        <TextBox x:Name="SearchTextBox"
-                                 Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource ModernTextBox}"
-                                 VerticalContentAlignment="Center">
-                            <TextBox.InputBindings>
-                                <KeyBinding Key="Return" Command="{Binding SearchCommand}"/>
-                            </TextBox.InputBindings>
-                        </TextBox>
-                        <!-- Placeholder text -->
-                        <TextBlock Text="Enter artist and song (e.g., Queen Bohemian Rhapsody)"
-                                   Foreground="{DynamicResource TextMutedBrush}"
-                                   VerticalAlignment="Center"
-                                   Margin="10,0,0,0"
-                                   IsHitTestVisible="False">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Text, ElementName=SearchTextBox}" Value="">
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
+                        <!-- Search TextBox with Placeholder -->
+                        <Grid Grid.Column="0">
+                            <TextBox x:Name="SearchTextBox"
+                                     Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     VerticalContentAlignment="Center">
+                                <TextBox.InputBindings>
+                                    <KeyBinding Key="Return" Command="{Binding SearchCommand}"/>
+                                </TextBox.InputBindings>
+                            </TextBox>
+                            <TextBlock Text="Enter artist and song (e.g., Queen Bohemian Rhapsody)"
+                                       Foreground="{DynamicResource TextMutedBrush}"
+                                       VerticalAlignment="Center"
+                                       Margin="10,0,0,0"
+                                       IsHitTestVisible="False">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Text, ElementName=SearchTextBox}" Value="">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
+
+                        <Button Grid.Column="1"
+                                Content="Search"
+                                Command="{Binding SearchCommand}"
+                                Style="{StaticResource ModernButton}"
+                                Margin="8,0,0,0"/>
+                        <Button Grid.Column="2"
+                                Content="Clear"
+                                Command="{Binding ClearSearchResultsCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                Margin="8,0,0,0"/>
                     </Grid>
 
-                    <Button Grid.Column="1"
-                            Content="Search"
-                            Command="{Binding SearchCommand}"
-                            Style="{StaticResource ModernButton}"
-                            Margin="10,0,0,0"/>
-                    <Button Grid.Column="2"
-                            Content="Clear"
-                            Command="{Binding ClearSearchResultsCommand}"
-                            Style="{StaticResource SecondaryButton}"
-                            Margin="10,0,0,0"/>
+                    <!-- Search Results -->
+                    <ListView Grid.Row="1"
+                              ItemsSource="{Binding SearchResults}"
+                              SelectedItem="{Binding SelectedSearchResult}"
+                              Background="Transparent"
+                              BorderThickness="0"
+                              MaxHeight="180"
+                              Margin="0,8,0,0">
+                        <ListView.Style>
+                            <Style TargetType="ListView">
+                                <Setter Property="Visibility" Value="Visible"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SearchResults.Count}" Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListView.Style>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Margin" Value="0,2"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListViewItem">
+                                            <Border Background="{DynamicResource ControlBackgroundBrush}" CornerRadius="4" Padding="8">
+                                                <ContentPresenter/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Title}"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="{DynamicResource TextPrimaryBrush}"
+                                                       TextTrimming="CharacterEllipsis"/>
+                                            <Border Background="#10b981"
+                                                    CornerRadius="3"
+                                                    Padding="6,2"
+                                                    Margin="8,0,0,0"
+                                                    VerticalAlignment="Center"
+                                                    Visibility="{Binding IsOfficialAudio, Converter={StaticResource BoolToVis}}">
+                                                <TextBlock Text="{Binding SourceIndicator}"
+                                                           Foreground="White"
+                                                           FontSize="10"
+                                                           FontWeight="Bold"/>
+                                            </Border>
+                                        </StackPanel>
+                                        <TextBlock Foreground="{DynamicResource TextSecondaryBrush}" FontSize="11">
+                                            <Run Text="{Binding Artist}"/> - <Run Text="{Binding Duration}"/>
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding Duration}"
+                                               Foreground="{DynamicResource TextMutedBrush}"
+                                               VerticalAlignment="Center"
+                                               Margin="10,0"/>
+
+                                    <Button Grid.Column="2"
+                                            Content="Add"
+                                            Command="{Binding DataContext.AddSearchResultToQueueCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                            CommandParameter="{Binding}"
+                                            Style="{StaticResource SmallButton}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </Grid>
+            </TabItem>
 
-                <!-- Search Results -->
-                <ListView Grid.Row="1"
-                          ItemsSource="{Binding SearchResults}"
-                          SelectedItem="{Binding SelectedSearchResult}"
-                          Background="Transparent"
-                          BorderThickness="0"
-                          MaxHeight="150"
-                          Margin="0,10,0,0">
-                    <ListView.Style>
-                        <Style TargetType="ListView">
-                            <Setter Property="Visibility" Value="Visible"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding SearchResults.Count}" Value="0">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ListView.Style>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Margin" Value="0,2"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="ListViewItem">
-                                        <Border Background="{DynamicResource ControlBackgroundBrush}" CornerRadius="4" Padding="8">
-                                            <ContentPresenter/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
+            <!-- Direct URL Tab -->
+            <TabItem Header="Direct URL">
+                <StackPanel Margin="0,12,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-                                <StackPanel Grid.Column="0">
-                                    <TextBlock Text="{Binding Title}"
-                                               FontWeight="SemiBold"
-                                               Foreground="{DynamicResource TextPrimaryBrush}"
-                                               TextTrimming="CharacterEllipsis"/>
-                                    <TextBlock Foreground="{DynamicResource TextSecondaryBrush}" FontSize="11">
-                                        <Run Text="{Binding Artist}"/> - <Run Text="{Binding Duration}"/>
-                                    </TextBlock>
-                                </StackPanel>
+                        <Grid Grid.Column="0">
+                            <TextBox x:Name="UrlTextBox"
+                                     Text="{Binding SingleUrl, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     VerticalContentAlignment="Center">
+                                <TextBox.InputBindings>
+                                    <KeyBinding Key="Return" Command="{Binding StartDownloadCommand}"/>
+                                </TextBox.InputBindings>
+                            </TextBox>
+                            <TextBlock Text="Paste a YouTube URL"
+                                       Foreground="{DynamicResource TextMutedBrush}"
+                                       VerticalAlignment="Center"
+                                       Margin="10,0,0,0"
+                                       IsHitTestVisible="False">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Text, ElementName=UrlTextBox}" Value="">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
+                        <Button Grid.Column="1"
+                                Content="Paste"
+                                Command="{Binding PasteFromClipboardCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                Margin="8,0,0,0"/>
+                    </Grid>
 
-                                <TextBlock Grid.Column="1"
-                                           Text="{Binding Duration}"
-                                           Foreground="{DynamicResource TextMutedBrush}"
-                                           VerticalAlignment="Center"
-                                           Margin="10,0"/>
-
-                                <Button Grid.Column="2"
-                                        Content="Add"
-                                        Command="{Binding DataContext.AddSearchResultToQueueCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                        CommandParameter="{Binding}"
-                                        Style="{StaticResource SmallButton}"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </Grid>
-        </GroupBox>
-
-        <!-- URL Input Section -->
-        <GroupBox Grid.Row="2" Header="Direct URL Input" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,15">
-            <StackPanel Margin="10">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBox Grid.Column="0"
-                             Text="{Binding SingleUrl, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBlock Text="Batch URLs (one per line):"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
+                               Margin="0,12,0,4"
+                               FontSize="12"/>
+                    <TextBox Text="{Binding BatchUrls, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource ModernTextBox}"
-                             VerticalContentAlignment="Center">
-                        <TextBox.InputBindings>
-                            <KeyBinding Key="Return" Command="{Binding StartDownloadCommand}"/>
-                        </TextBox.InputBindings>
-                    </TextBox>
-                    <Button Grid.Column="1"
-                            Content="Paste"
-                            Command="{Binding PasteFromClipboardCommand}"
-                            Style="{StaticResource SecondaryButton}"
-                            Margin="10,0,0,0"/>
-                </Grid>
+                             Height="80"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             VerticalScrollBarVisibility="Auto"/>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
 
-                <TextBlock Text="Batch URLs (one per line):" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,10,0,5"/>
-                <TextBox Text="{Binding BatchUrls, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource ModernTextBox}"
-                         Height="60"
-                         AcceptsReturn="True"
-                         TextWrapping="Wrap"
-                         VerticalScrollBarVisibility="Auto"/>
-            </StackPanel>
-        </GroupBox>
-
-        <!-- Download Settings Section -->
-        <GroupBox Grid.Row="3" Header="Download Options" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,15">
-            <Grid Margin="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+        <!-- Download Options - Two Rows -->
+        <Border Grid.Row="2"
+                Background="{DynamicResource ControlBackgroundBrush}"
+                CornerRadius="6"
+                Padding="12,10"
+                Margin="0,0,0,12">
+            <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="Output Folder:" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <!-- Row 1: Output Folder, Format, Quality -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Output:"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
+                               VerticalAlignment="Center"
+                               Margin="0,0,8,0"/>
                     <TextBox Text="{Binding Settings.OutputFolder}"
                              Style="{StaticResource ModernTextBox}"
-                             Width="350"
-                             IsReadOnly="True"/>
-                    <Button Content="Browse"
+                             Width="300"
+                             IsReadOnly="True"
+                             FontSize="11"
+                             Padding="6,4"/>
+                    <Button Content="..."
                             Command="{Binding BrowseFolderCommand}"
                             Style="{StaticResource SecondaryButton}"
-                            Margin="10,0,0,0"/>
-                </StackPanel>
+                            Padding="10,4"
+                            Margin="4,0,0,0"/>
 
-                <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="Format:" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="Format:"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
+                               VerticalAlignment="Center"
+                               Margin="20,0,8,0"/>
                     <ComboBox ItemsSource="{Binding Settings.AvailableFormats}"
                               SelectedItem="{Binding Settings.AudioFormat}"
-                              Width="80"/>
+                              Width="75"/>
 
-                    <TextBlock Text="Quality:" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center" Margin="20,0,10,0"/>
+                    <TextBlock Text="Quality:"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
+                               VerticalAlignment="Center"
+                               Margin="20,0,8,0"/>
                     <ComboBox ItemsSource="{Binding Settings.AvailableBitrates}"
                               SelectedItem="{Binding Settings.AudioBitrate}"
                               Width="70"/>
-                    <TextBlock Text="kbps" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                    <TextBlock Text="kbps"
+                               Foreground="{DynamicResource TextMutedBrush}"
+                               VerticalAlignment="Center"
+                               Margin="4,0,0,0"
+                               FontSize="11"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,10,0,0">
+                <!-- Row 2: Checkboxes -->
+                <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,10,0,0">
                     <CheckBox Content="Download playlists"
                               IsChecked="{Binding Settings.DownloadPlaylist}"
                               Foreground="{DynamicResource TextSecondaryBrush}"
@@ -394,15 +480,34 @@
                               Foreground="{DynamicResource TextSecondaryBrush}"/>
                 </StackPanel>
             </Grid>
-        </GroupBox>
+        </Border>
 
-        <!-- Download Queue -->
-        <GroupBox Grid.Row="4" Header="Downloads" Foreground="{DynamicResource TextSecondaryBrush}">
+        <!-- Downloads List - Takes Remaining Space -->
+        <Border Grid.Row="3"
+                Background="{DynamicResource ControlBackgroundBrush}"
+                CornerRadius="6"
+                Padding="12">
             <Grid>
-                <ListView ItemsSource="{Binding Downloads}"
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Header -->
+                <TextBlock Grid.Row="0"
+                           Text="Downloads"
+                           FontWeight="SemiBold"
+                           FontSize="14"
+                           Foreground="{DynamicResource TextPrimaryBrush}"
+                           Margin="0,0,0,8"/>
+
+                <!-- Download Items -->
+                <ListView Grid.Row="1"
+                          ItemsSource="{Binding Downloads}"
                           Background="Transparent"
                           BorderThickness="0"
-                          Foreground="{DynamicResource TextPrimaryBrush}">
+                          Foreground="{DynamicResource TextPrimaryBrush}"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -411,7 +516,9 @@
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="ListViewItem">
-                                        <Border Background="{DynamicResource ControlBackgroundBrush}" CornerRadius="4" Padding="10">
+                                        <Border Background="{DynamicResource WindowBackgroundBrush}"
+                                                CornerRadius="4"
+                                                Padding="10,8">
                                             <ContentPresenter/>
                                         </Border>
                                     </ControlTemplate>
@@ -424,30 +531,30 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="140"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <StackPanel Grid.Column="0">
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                     <TextBlock Text="{Binding Title}"
                                                FontWeight="SemiBold"
                                                Foreground="{DynamicResource TextPrimaryBrush}"
                                                TextTrimming="CharacterEllipsis"/>
                                     <TextBlock Text="{Binding Url}"
-                                               Foreground="{DynamicResource TextSecondaryBrush}"
-                                               FontSize="11"
+                                               Foreground="{DynamicResource TextMutedBrush}"
+                                               FontSize="10"
                                                TextTrimming="CharacterEllipsis"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0">
                                     <ProgressBar Value="{Binding Progress}"
-                                                 Height="6"
+                                                 Height="4"
                                                  Background="{DynamicResource BorderBrush}"
                                                  Foreground="{DynamicResource AccentBrush}"/>
                                     <TextBlock Text="{Binding StatusText}"
                                                Foreground="{DynamicResource TextSecondaryBrush}"
-                                               FontSize="11"
-                                               Margin="0,4,0,0"/>
+                                               FontSize="10"
+                                               Margin="0,3,0,0"/>
                                 </StackPanel>
 
                                 <Button Grid.Column="2"
@@ -455,17 +562,21 @@
                                         Command="{Binding DataContext.CancelDownloadCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
                                         CommandParameter="{Binding}"
                                         Style="{StaticResource DangerButton}"
-                                        Visibility="{Binding CancellationTokenSource, Converter={StaticResource BoolToVis}}"/>
+                                        Visibility="{Binding CancellationTokenSource, Converter={StaticResource BoolToVis}}"
+                                        FontSize="11"
+                                        Padding="8,4"/>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
 
-                <TextBlock Text="No downloads yet. Search for music or enter a YouTube URL above."
+                <!-- Empty State -->
+                <TextBlock Grid.Row="1"
+                           Text="No downloads yet. Search for music or enter a URL above."
                            Foreground="{DynamicResource TextMutedBrush}"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           FontSize="14">
+                           FontSize="13">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -478,12 +589,13 @@
                     </TextBlock.Style>
                 </TextBlock>
             </Grid>
-        </GroupBox>
+        </Border>
 
-        <!-- Footer / Actions -->
-        <Grid Grid.Row="5" Margin="0,15,0,0">
+        <!-- Footer -->
+        <Grid Grid.Row="4" Margin="0,12,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
@@ -492,30 +604,47 @@
             <TextBlock Grid.Column="0"
                        Text="{Binding StatusMessage}"
                        Foreground="{DynamicResource TextSecondaryBrush}"
-                       VerticalAlignment="Center"/>
+                       VerticalAlignment="Center"
+                       FontSize="12"/>
 
-            <Button Grid.Column="1"
+            <!-- Update Notice -->
+            <Border Grid.Column="1"
+                    Background="#2D1F1F"
+                    CornerRadius="4"
+                    Padding="10,5"
+                    Margin="0,0,10,0"
+                    Cursor="Hand"
+                    MouseLeftButtonUp="UpdateNotice_Click"
+                    Visibility="{Binding UpdateAvailable, Converter={StaticResource BoolToVis}}">
+                <TextBlock Foreground="#F87171" FontSize="12">
+                    <Run Text="Update v"/><Run Text="{Binding UpdateVersion}"/><Run Text=" available - Click to install"/>
+                </TextBlock>
+            </Border>
+
+            <Button Grid.Column="2"
                     Content="Open Folder"
                     Command="{Binding OpenOutputFolderCommand}"
                     Style="{StaticResource SecondaryButton}"
-                    Margin="0,0,10,0"/>
-
-            <Button Grid.Column="2"
-                    Content="Clear Completed"
-                    Command="{Binding ClearCompletedCommand}"
-                    Style="{StaticResource SecondaryButton}"
-                    Margin="0,0,10,0"/>
+                    Padding="12,6"
+                    Margin="0,0,8,0"/>
 
             <Button Grid.Column="3"
+                    Content="Clear"
+                    Command="{Binding ClearCompletedCommand}"
+                    Style="{StaticResource SecondaryButton}"
+                    Padding="12,6"
+                    Margin="0,0,8,0"/>
+
+            <Button Grid.Column="4"
                     Content="Download"
                     Command="{Binding StartDownloadCommand}"
                     Style="{StaticResource ModernButton}"
                     FontWeight="Bold"
-                    Padding="24,10"/>
+                    Padding="20,8"/>
         </Grid>
 
         <!-- Loading Overlay -->
-        <Grid Grid.RowSpan="6"
+        <Grid Grid.RowSpan="5"
               Background="{DynamicResource OverlayBrush}"
               Visibility="{Binding IsInitializing, Converter={StaticResource BoolToVis}}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">

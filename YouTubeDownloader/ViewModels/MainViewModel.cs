@@ -44,6 +44,12 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private SearchResult? _selectedSearchResult;
 
+    [ObservableProperty]
+    private bool _updateAvailable;
+
+    [ObservableProperty]
+    private string _updateVersion = string.Empty;
+
     public ObservableCollection<DownloadItem> Downloads { get; } = [];
     public ObservableCollection<SearchResult> SearchResults { get; } = [];
 
@@ -51,6 +57,8 @@ public partial class MainViewModel : ObservableObject
     {
         _downloadService = new YtDlpService();
     }
+
+    public UpdateInfo? LatestUpdateInfo { get; private set; }
 
     public async Task InitializeAsync()
     {
@@ -64,6 +72,24 @@ public partial class MainViewModel : ObservableObject
         }
 
         IsInitializing = false;
+    }
+
+    public async Task CheckForUpdatesAsync()
+    {
+        try
+        {
+            var updateInfo = await UpdateService.Instance.CheckForUpdatesAsync();
+            if (updateInfo != null && UpdateService.Instance.UpdateAvailable)
+            {
+                LatestUpdateInfo = updateInfo;
+                UpdateAvailable = true;
+                UpdateVersion = updateInfo.Version?.ToString(3) ?? "New";
+            }
+        }
+        catch
+        {
+            // Silently ignore update check failures
+        }
     }
 
     [RelayCommand]
@@ -134,7 +160,7 @@ public partial class MainViewModel : ObservableObject
     private void AddSearchResultToQueue(SearchResult? result)
     {
         if (result == null) return;
-        AddDownloadItem(result.Url, $"{result.Artist} - {result.Title}");
+        AddDownloadItem(result.Url, $"{result.Artist} - {result.DisplayTrack}");
     }
 
     [RelayCommand]
@@ -142,7 +168,7 @@ public partial class MainViewModel : ObservableObject
     {
         foreach (var result in SearchResults)
         {
-            AddDownloadItem(result.Url, $"{result.Artist} - {result.Title}");
+            AddDownloadItem(result.Url, $"{result.Artist} - {result.DisplayTrack}");
         }
     }
 
@@ -215,7 +241,8 @@ public partial class MainViewModel : ObservableObject
 
     private void AddDownloadItem(string url, string? title = null)
     {
-        if (Downloads.Any(d => d.Url == url)) return;
+        // Only block if URL is already pending or in progress (allow re-download in different format)
+        if (Downloads.Any(d => d.Url == url && d.Status is DownloadStatus.Pending or DownloadStatus.FetchingInfo or DownloadStatus.Downloading or DownloadStatus.Converting)) return;
 
         var item = new DownloadItem
         {
@@ -270,7 +297,7 @@ public partial class MainViewModel : ObservableObject
                         if (info != null)
                         {
                             item.Title = Settings.UseArtistTitleNaming && !string.IsNullOrEmpty(info.Artist)
-                                ? $"{info.Artist} - {info.Title}"
+                                ? $"{info.Artist} - {info.DisplayTrack}"
                                 : info.Title;
                         }
                         else

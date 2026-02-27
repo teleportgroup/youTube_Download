@@ -70,8 +70,9 @@ public partial class DownloadSettings : ObservableObject
     {
         if (UseArtistTitleNaming)
         {
-            // Use artist - title format with fallback to just title
-            return Path.Combine(outputFolder, "%(artist,uploader)s - %(title)s.%(ext)s");
+            // Use artist - track format. %(track)s is the clean song name without artist prefix.
+            // Falls back to title if track not available.
+            return Path.Combine(outputFolder, "%(artist,uploader)s - %(track,title)s.%(ext)s");
         }
         return Path.Combine(outputFolder, "%(title)s.%(ext)s");
     }
